@@ -4,7 +4,7 @@ const childProcess = require("child_process")
 
 // get the user inputs args
 const inputs = {
-	releaseVersion: core.getInput("releaseVersion"),
+	releaseVersion: core.getInput("release_version"),
 	nopeusConfig: path.join(process.env.GITHUB_WORKSPACE, core.getInput("nopeusConfig") || "nopeus.yaml"),
 	nopeusToken: process.env.NOPEUS_TOKEN,
 }
