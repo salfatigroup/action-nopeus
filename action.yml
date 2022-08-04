@@ -1,0 +1,11 @@
+name: Nopeus
+description: >
+  Adds an application layer to the cloud.
+author: Elon Salfati (Salfati Group)
+inputs:
+  release_version:
+    description: Override the nopeus.yaml release images
+    required: false
+runs:
+  using: node16
+  main: dist/index.js
