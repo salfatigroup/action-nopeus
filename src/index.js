@@ -49,7 +49,7 @@ function setupCredentials() {
 		// write aws credentials to ~/.aws/credentials
 		const credentialsFile = path.join(os.homedir(), ".aws", "credentials")
 		core.debug("writing aws credentials")
-		fs.writeFileSync(credentialsFile, `[default]\naws_access_key_id = ${inputs.awsAccessKeyId}\naws_secret_access_key = ${inputs.awsSecretAccessKey}`)
+		childProcess.execSync(`echo "[default]\naws_access_key_id = ${inputs.awsAccessKeyId}\naws_secret_access_key = ${inputs.awsSecretAccessKey}" > ${credentialsFile}`, { stdio: "inherit" })
 	}
 }
 
