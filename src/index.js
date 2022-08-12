@@ -65,9 +65,9 @@ function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
 // install the nopeus binary
 function installNopeus() {
 	// install jq
-	core.debug("installing jq")
-	childProcess.execSync("sudo apt-get update", { stdio: "inherit" })
-	childProcess.execSync("sudo apt-get install -y jq", { stdio: "inherit" })
+	// core.debug("installing jq")
+	// childProcess.execSync("sudo apt-get update", { stdio: "inherit" })
+	// childProcess.execSync("sudo apt-get install -y jq", { stdio: "inherit" })
 
 	core.debug("installing nopeus binary")
 	// install nopeus
