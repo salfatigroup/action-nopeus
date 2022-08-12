@@ -31,11 +31,11 @@ function run() {
 
 	// build the nopeus liftoff command
 	const cmd = [`${os.homedir()}/nopeus/nopeus`, 'liftoff', '-c', inputs.nopeusConfig]
+	// if (inputs.nopeusToken) {
+	// 	core.debug("adding nopeus token")
+	// 	cmd.push('-t', inputs.nopeusToken)
+	// }
 	core.debug("cmd: " + cmd.join(" "))
-	if (inputs.nopeusToken) {
-		core.debug("adding nopeus token")
-		cmd.push('-t', inputs.nopeusToken)
-	}
 
 	// run the liftoff command
 	core.debug("running liftoff")
