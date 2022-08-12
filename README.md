@@ -17,8 +17,8 @@ with:
     aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 env:
     # nopeus access to private registries (optional)
-    NOPEUS_DOCKER_SERVER: "<REGISTRY SERVER>"
-    NOPEUS_DOCKER_USERNAME: "<USERNAME>"
-    NOPEUS_DOCKER_PASSWORD: "<PASSWORD>"
-    NOPEUS_DOCKER_EMAIL: "<EMAIL>"
+    NOPEUS_DOCKER_SERVER: ${{ secrets.NOPEUS_DOCKER_SERVER }}
+    NOPEUS_DOCKER_USERNAME: ${{ secrets.NOPEUS_DOCKER_USERNAME }}
+    NOPEUS_DOCKER_PASSWORD: ${{ secrets.NOPEUS_DOCKER_PASSWORD }}
+    NOPEUS_DOCKER_EMAIL: ${{ secrets.NOPEUS_DOCKER_EMAIL }}
 ```
