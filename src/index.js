@@ -46,10 +46,15 @@ function run() {
 function setupCredentials() {
 	// setup aws credentials
 	if (inputs.awsAccessKeyId && inputs.awsSecretAccessKey) {
+		// create the .aws directory if it doesn't exist
+		if (!fs.existsSync(path.join(os.homedir(), ".aws"))) {
+			core.debug("creating .aws directory")
+			fs.mkdirSync(path.join(os.homedir(), ".aws"))
+		}
 		// write aws credentials to ~/.aws/credentials
 		const credentialsFile = path.join(os.homedir(), ".aws", "credentials")
-		core.debug("writing aws credentials")
-		childProcess.execSync(`echo "[default]\naws_access_key_id = ${inputs.awsAccessKeyId}\naws_secret_access_key = ${inputs.awsSecretAccessKey}" > ${credentialsFile}`, { stdio: "inherit" })
+		core.debug("writing aws credentials to " + credentialsFile)
+		fs.writeFileSync(credentialsFile, `[default]\naws_access_key_id = ${inputs.awsAccessKeyId}\naws_secret_access_key = ${inputs.awsSecretAccessKey}`)
 	}
 }
 
