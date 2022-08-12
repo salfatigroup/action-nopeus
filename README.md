@@ -9,7 +9,7 @@ with:
     # override nopeus.yaml version (optional)
     release_version: v1.0.0
     # nopeus pro toke (optiona)
-    nopeus_token: <YOUR TOKEN>
+    nopeus_token: ${{ secrets.NOPEUS_TOKEN }}
     # disable remote caching (optional. not recommended.)
     disable_cache: false
     # aws credentials
