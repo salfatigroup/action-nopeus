@@ -71,7 +71,7 @@ function installNopeus() {
 
 	core.debug("installing nopeus binary")
 	// install nopeus
-	cmd = `curl -sfL https://cdn.salfati.group/nopeus/install.sh | NOPEUS_TOKEN=${process.env.NOPEUS_TOKEN} bash`
+	cmd = `curl -sfL https://cdn.salfati.group/nopeus/install.sh | bash`
 	childProcess.execSync(cmd, { stdio: "inherit" })
 	core.debug("installation complete")
 }
