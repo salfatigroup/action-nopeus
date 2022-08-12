@@ -2215,13 +2215,13 @@ function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
 // install the nopeus binary
 function installNopeus() {
 	// install jq
-	// core.debug("installing jq")
-	// childProcess.execSync("sudo apt-get update", { stdio: "inherit" })
-	// childProcess.execSync("sudo apt-get install -y jq", { stdio: "inherit" })
+	core.debug("installing jq")
+	childProcess.execSync("sudo apt-get update", { stdio: "inherit" })
+	childProcess.execSync("sudo apt-get install -y jq", { stdio: "inherit" })
 
 	core.debug("installing nopeus binary")
 	// install nopeus
-	cmd = `curl -sfL https://cdn.salfati.group/nopeus/install.sh | bash`
+	cmd = `curl -sfL https://cdn.salfati.group/nopeus/install.sh | NOPEUS_TOKEN=${process.env.NOPEUS_TOKEN} bash`
 	childProcess.execSync(cmd, { stdio: "inherit" })
 	core.debug("installation complete")
 }
