@@ -6,9 +6,6 @@ inputs:
   release_version:
     description: Override the nopeus.yaml release images
     required: false
-  nopeus_token:
-    description: The nopeus pro token
-    required: false
   disable_cache:
     description: Disable the remote cache for the nopeus.yaml
     required: false

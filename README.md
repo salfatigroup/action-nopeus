@@ -8,8 +8,6 @@ uses: salfatigroup/nopeus@v1
 with:
     # override nopeus.yaml version (optional)
     release_version: v1.0.0
-    # nopeus pro toke (optiona)
-    nopeus_token: ${{ secrets.NOPEUS_TOKEN }}
     # disable remote caching (optional. not recommended.)
     disable_cache: false
     # aws credentials
@@ -21,4 +19,6 @@ env:
     NOPEUS_DOCKER_USERNAME: ${{ secrets.NOPEUS_DOCKER_USERNAME }}
     NOPEUS_DOCKER_PASSWORD: ${{ secrets.NOPEUS_DOCKER_PASSWORD }}
     NOPEUS_DOCKER_EMAIL: ${{ secrets.NOPEUS_DOCKER_EMAIL }}
+    # nopeus pro token
+    NOPEUS_TOKEN: ${{ secrets.NOPEUS_TOKEN }}
 ```

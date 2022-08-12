@@ -8,7 +8,7 @@ const childProcess = require("child_process")
 const inputs = {
 	releaseVersion: core.getInput("release_version"),
 	nopeusConfig: path.join(process.env.GITHUB_WORKSPACE, core.getInput("nopeusConfig") || "nopeus.yaml"),
-	nopeusToken: core.getInput("nopeus_token"),
+	nopeusToken: process.env.NOPEUS_TOKEN,
 	disableCache: core.getInput("disable_cache") === "true",
 	awsAccessKeyId: core.getInput("aws_access_key_id"),
 	awsSecretAccessKey: core.getInput("aws_secret_access_key"),
