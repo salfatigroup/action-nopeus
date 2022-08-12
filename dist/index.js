@@ -2149,6 +2149,7 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const os = __nccwpck_require__(37)
+const fs = __nccwpck_require__(147)
 const core = __nccwpck_require__(186)
 const path = __nccwpck_require__(17)
 const childProcess = __nccwpck_require__(81)
@@ -2157,8 +2158,10 @@ const childProcess = __nccwpck_require__(81)
 const inputs = {
 	releaseVersion: core.getInput("release_version"),
 	nopeusConfig: path.join(process.env.GITHUB_WORKSPACE, core.getInput("nopeusConfig") || "nopeus.yaml"),
-	nopeusToken: process.env.NOPEUS_TOKEN,
-	disableCache: core.getInput("disable_cache") === "true"
+	nopeusToken: core.getInput("nopeus_token"),
+	disableCache: core.getInput("disable_cache") === "true",
+	awsAccessKeyId: core.getInput("aws_access_key_id"),
+	awsSecretAccessKey: core.getInput("aws_secret_access_key"),
 }
 
 // action entrypoint
@@ -2166,6 +2169,10 @@ function run() {
 	core.debug("inputs: " + JSON.stringify(inputs))
 	// install the nopeus binary
 	installNopeus()
+
+	// setup credentials
+	core.debug("setting up credentials")
+	setupCredentials()
 
 	// upgrade release version if needed
 	if (inputs.releaseVersion) {
@@ -2184,6 +2191,16 @@ function run() {
 	core.debug("running liftoff")
 	childProcess.execSync(cmd.join(" "), { stdio: "inherit" })
 	console.log('nopeus liftoff complete')
+}
+
+function setupCredentials() {
+	// setup aws credentials
+	if (inputs.awsAccessKeyId && inputs.awsSecretAccessKey) {
+		// write aws credentials to ~/.aws/credentials
+		const credentialsFile = path.join(os.homedir(), ".aws", "credentials")
+		core.debug("writing aws credentials")
+		fs.writeFileSync(credentialsFile, `[default]\naws_access_key_id = ${inputs.awsAccessKeyId}\naws_secret_access_key = ${inputs.awsSecretAccessKey}`)
+	}
 }
 
 // override the nopeus release version
