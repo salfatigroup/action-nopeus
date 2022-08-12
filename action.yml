@@ -6,8 +6,17 @@ inputs:
   release_version:
     description: Override the nopeus.yaml release images
     required: false
+  nopeus_token:
+    description: The nopeus pro token
+    required: false
   disable_cache:
     description: Disable the remote cache for the nopeus.yaml
+    required: false
+  aws_access_key_id:
+    description: The AWS access key id
+    required: false
+  aws_secret_access_key:
+    description: The AWS secret access key
     required: false
 runs:
   using: node16

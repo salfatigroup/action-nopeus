@@ -1,4 +1,5 @@
 const os = require("os")
+const fs = require("fs")
 const core = require("@actions/core")
 const path = require("path")
 const childProcess = require("child_process")
@@ -7,8 +8,10 @@ const childProcess = require("child_process")
 const inputs = {
 	releaseVersion: core.getInput("release_version"),
 	nopeusConfig: path.join(process.env.GITHUB_WORKSPACE, core.getInput("nopeusConfig") || "nopeus.yaml"),
-	nopeusToken: process.env.NOPEUS_TOKEN,
-	disableCache: core.getInput("disable_cache") === "true"
+	nopeusToken: core.getInput("nopeus_token"),
+	disableCache: core.getInput("disable_cache") === "true",
+	awsAccessKeyId: core.getInput("aws_access_key_id"),
+	awsSecretAccessKey: core.getInput("aws_secret_access_key"),
 }
 
 // action entrypoint
@@ -16,6 +19,10 @@ function run() {
 	core.debug("inputs: " + JSON.stringify(inputs))
 	// install the nopeus binary
 	installNopeus()
+
+	// setup credentials
+	core.debug("setting up credentials")
+	setupCredentials()
 
 	// upgrade release version if needed
 	if (inputs.releaseVersion) {
@@ -34,6 +41,16 @@ function run() {
 	core.debug("running liftoff")
 	childProcess.execSync(cmd.join(" "), { stdio: "inherit" })
 	console.log('nopeus liftoff complete')
+}
+
+function setupCredentials() {
+	// setup aws credentials
+	if (inputs.awsAccessKeyId && inputs.awsSecretAccessKey) {
+		// write aws credentials to ~/.aws/credentials
+		const credentialsFile = path.join(os.homedir(), ".aws", "credentials")
+		core.debug("writing aws credentials")
+		fs.writeFileSync(credentialsFile, `[default]\naws_access_key_id = ${inputs.awsAccessKeyId}\naws_secret_access_key = ${inputs.awsSecretAccessKey}`)
+	}
 }
 
 // override the nopeus release version
