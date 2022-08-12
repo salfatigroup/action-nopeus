@@ -2148,19 +2148,22 @@ module.exports = require("util");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
+const os = __nccwpck_require__(37)
 const core = __nccwpck_require__(186)
 const path = __nccwpck_require__(17)
 const childProcess = __nccwpck_require__(81)
 
 // get the user inputs args
 const inputs = {
-	releaseVersion: core.getInput("releaseVersion"),
+	releaseVersion: core.getInput("release_version"),
 	nopeusConfig: path.join(process.env.GITHUB_WORKSPACE, core.getInput("nopeusConfig") || "nopeus.yaml"),
 	nopeusToken: process.env.NOPEUS_TOKEN,
+	disableCache: core.getInput("disable_cache") === "true"
 }
 
 // action entrypoint
 function run() {
+	core.debug("inputs: " + JSON.stringify(inputs))
 	// install the nopeus binary
 	installNopeus()
 
@@ -2170,26 +2173,40 @@ function run() {
 	}
 
 	// build the nopeus liftoff command
-	const cmd = ['nopeus', 'liftoff', '-c', inputs.nopeusConfig]
+	const cmd = [`${os.homedir()}/nopeus/nopeus`, 'liftoff', '-c', inputs.nopeusConfig]
+	core.debug("cmd: " + cmd.join(" "))
 	if (inputs.nopeusToken) {
+		core.debug("adding nopeus token")
 		cmd.push('-t', inputs.nopeusToken)
 	}
 
 	// run the liftoff command
+	core.debug("running liftoff")
 	childProcess.execSync(cmd.join(" "), { stdio: "inherit" })
+	console.log('nopeus liftoff complete')
 }
 
 // override the nopeus release version
 function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
+	core.debug("overriding nopeus release version")
 	const nopeusConfigContent = fs.readFileSync(nopeusConfig, "utf8")
 	const nopeusConfigContentWithReleaseVersion = nopeusConfigContent.replace(/^version:.*$/m, `version: ${releaseVersion}`)
 	fs.writeFileSync(nopeusConfig, nopeusConfigContentWithReleaseVersion)
+	core.debug(fs.readFileSync(nopeusConfig, "utf8"))
 }
 
 // install the nopeus binary
 function installNopeus() {
-	const cmd = ["curl", "-sfL", "https://nopeus.co/static/install.sh", "|", "bash"]
-	childProcess.execSync(cmd.join(" "), { stdio: "inherit" })
+	// install jq
+	core.debug("installing jq")
+	childProcess.execSync("apt-get update", { stdio: "inherit" })
+	childProcess.execSync("apt-get install -y jq", { stdio: "inherit" })
+
+	core.debug("installing nopeus binary")
+	// install nopeus
+	cmd = `curl -sfL https://cdn.salfati.group/nopeus/install.sh | bash`
+	childProcess.execSync(cmd, { stdio: "inherit" })
+	core.debug("installation complete")
 }
 
 // run nopeus liftoff
