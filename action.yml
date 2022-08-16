@@ -6,8 +6,8 @@ inputs:
   release_version:
     description: Override the nopeus.yaml release images
     required: false
-  disable_cache:
-    description: Disable the remote cache for the nopeus.yaml
+  environments:
+    description: A list of the environments to deploy frmo the nopeus file. Optional, by default deployes all the environments. e.g., prod,staging
     required: false
   aws_access_key_id:
     description: The AWS access key id

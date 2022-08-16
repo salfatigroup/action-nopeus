@@ -4,12 +4,13 @@
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
-	"build": "ncc build src/index.js -o dist --source-map"
+    "build": "ncc build src/index.js -o dist --source-map"
   },
   "dependencies": {
     "@actions/core": "^1.9.0",
     "@actions/github": "^5.0.3",
-    "glob": "^8.0.3"
+    "glob": "^8.0.3",
+    "yaml": "^2.1.1"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.34.0"

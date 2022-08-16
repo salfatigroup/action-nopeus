@@ -3,12 +3,15 @@ const fs = require("fs")
 const core = require("@actions/core")
 const path = require("path")
 const childProcess = require("child_process")
+const YAML = require("yaml")
 
 // get the user inputs args
 const inputs = {
 	releaseVersion: core.getInput("release_version"),
+  environmentsToDeploy: core.getInput("environments"),
 	nopeusConfig: path.join(process.env.GITHUB_WORKSPACE, core.getInput("nopeusConfig") || "nopeus.yaml"),
 	nopeusToken: process.env.NOPEUS_TOKEN,
+	downloadToken: process.env.DOWNLOAD_TOKEN,
 	disableCache: core.getInput("disable_cache") === "true",
 	awsAccessKeyId: core.getInput("aws_access_key_id"),
 	awsSecretAccessKey: core.getInput("aws_secret_access_key"),
@@ -29,12 +32,20 @@ function run() {
 		overrideNopeusReleaseVersion(nopeusConfig, inputs.releaseVersion)
 	}
 
+  // delete any environments from the nopeus yaml that do not exists
+  // in the environmentsToDeploy value
+  if (inputs.environmentsToDeploy) {
+    // split and clean the environmentsToDeploy value
+    const environmentsToDeploy = inputs.environmentsToDeploy.split(",").map(env => env.trim()).filter(env => env)
+    updateEnvironments(environmentsToDeploy)
+  }
+
 	// build the nopeus liftoff command
 	const cmd = [`${os.homedir()}/nopeus/nopeus`, 'liftoff', '-c', inputs.nopeusConfig]
-	// if (inputs.nopeusToken) {
-	// 	core.debug("adding nopeus token")
-	// 	cmd.push('-t', inputs.nopeusToken)
-	// }
+	if (inputs.nopeusToken) {
+		core.debug("adding nopeus token")
+		cmd.push('-t', inputs.nopeusToken)
+	}
 	core.debug("cmd: " + cmd.join(" "))
 
 	// run the liftoff command
@@ -67,6 +78,25 @@ function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
 	core.debug(fs.readFileSync(nopeusConfig, "utf8"))
 }
 
+// remove environments from nopeus.yaml that do not exists
+// in the provided environments
+function updateEnvironments(nopeusConfigPath, environments) {
+  core.debug("overriding nopeus environments")
+  // read the nopeus.yaml file
+  const nopeusConfigContent = fs.readFileSync(nopeusConfigPath, "utf8")
+  // parse the configuration
+  const nopeusConfig = YAML.parse(nopeusConfigContent)
+  // remove environments that do not exists in the environments value
+  const environmentsToRemove = nopeusConfig.environments.filter(env => !environments.includes(env.name))
+  // remove the environments from the nopeus.yaml file
+  environmentsToRemove.forEach(env => {
+    delete nopeusConfig.environments[env.name]
+  })
+
+  // write the nopeus.yaml file
+  fs.writeFileSync(nopeusConfigPath, YAML.stringify(nopeusConfig))
+}
+
 // install the nopeus binary
 function installNopeus() {
 	// install jq
@@ -76,7 +106,7 @@ function installNopeus() {
 
 	core.debug("installing nopeus binary")
 	// install nopeus
-	cmd = `curl -sfL https://cdn.salfati.group/nopeus/install.sh | bash`
+	cmd = `curl -sfL https://cdn.salfati.group/nopeus/install.sh | NOPEUS_TOKEN=${inputs.downloadToken} bash`
 	childProcess.execSync(cmd, { stdio: "inherit" })
 	core.debug("installation complete")
 }
