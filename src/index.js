@@ -9,7 +9,7 @@ const YAML = require("yaml")
 const inputs = {
 	releaseVersion: core.getInput("release_version"),
   environmentsToDeploy: core.getInput("environments"),
-	nopeusConfig: core.getInput("nopeusConfig") || "nopeus.yaml",
+	nopeusConfig: path.join(process.env.GITHUB_WORKSPACE, core.getInput("nopeusConfig") || "nopeus.yaml"),
 	nopeusToken: process.env.NOPEUS_TOKEN,
 	downloadToken: process.env.NOPEUS_DOWNLOAD_KEY,
 	disableCache: core.getInput("disable_cache") === "true",
@@ -29,7 +29,7 @@ function run() {
 
 	// upgrade release version if needed
 	if (inputs.releaseVersion) {
-		overrideNopeusReleaseVersion(nopeusConfig, inputs.releaseVersion)
+		overrideNopeusReleaseVersion(inputs.nopeusConfig, inputs.releaseVersion)
 	}
 
   // delete any environments from the nopeus yaml that do not exists
