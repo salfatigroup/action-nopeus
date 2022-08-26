@@ -11113,7 +11113,7 @@ const YAML = __nccwpck_require__(4083)
 const inputs = {
 	releaseVersion: core.getInput("release_version"),
   environmentsToDeploy: core.getInput("environments"),
-	nopeusConfig: path.join(process.env.GITHUB_WORKSPACE, core.getInput("nopeusConfig") || "nopeus.yaml"),
+	nopeusConfig: core.getInput("nopeusConfig") || "nopeus.yaml",
 	nopeusToken: process.env.NOPEUS_TOKEN,
 	downloadToken: process.env.NOPEUS_DOWNLOAD_KEY,
 	disableCache: core.getInput("disable_cache") === "true",
