@@ -11175,7 +11175,7 @@ function setupCredentials() {
 
 // override the nopeus release version
 function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
-	core.debug("overriding nopeus release version")
+	core.debug("overriding nopeus release version in path: ", nopeusConfig, " with release version: ", releaseVersion)
 	const nopeusConfigContent = fs.readFileSync(nopeusConfig, "utf8")
 	const nopeusConfigContentWithReleaseVersion = nopeusConfigContent.replace(/^version:.*$/m, `version: ${releaseVersion}`)
 	fs.writeFileSync(nopeusConfig, nopeusConfigContentWithReleaseVersion)
