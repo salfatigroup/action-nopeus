@@ -7027,7 +7027,7 @@ function updateEnvironments(nopeusConfigPath, environments) {
   // write the nopeus.yaml file
   fs.writeFileSync(nopeusConfigPath, yaml.dump(nopeusConfig))
   core.debug("nopeus.yaml with updated environments:")
-  core.debug(fs.readFileSync(nopeusConfig, "utf8"))
+  core.debug(fs.readFileSync(nopeusConfigPath, "utf8"))
 }
 
 // install the nopeus binary
