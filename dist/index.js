@@ -11141,7 +11141,7 @@ function run() {
   if (inputs.environmentsToDeploy) {
     // split and clean the environmentsToDeploy value
     const environmentsToDeploy = inputs.environmentsToDeploy.split(",").map(env => env.trim()).filter(env => env)
-    updateEnvironments(environmentsToDeploy)
+    updateEnvironments(inputs.nopeusConfig, environmentsToDeploy)
   }
 
 	// build the nopeus liftoff command
@@ -11185,7 +11185,7 @@ function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
 // remove environments from nopeus.yaml that do not exists
 // in the provided environments
 function updateEnvironments(nopeusConfigPath, environments) {
-  core.debug("overriding nopeus environments")
+  core.debug(`overriding nopeus environments. nopeusConfigPath: ${nopeusConfigPath}, environments: ${environments}`)
   // read the nopeus.yaml file
   const nopeusConfigContent = fs.readFileSync(nopeusConfigPath, "utf8")
   // parse the configuration
