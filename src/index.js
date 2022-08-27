@@ -71,7 +71,7 @@ function setupCredentials() {
 
 // override the nopeus release version
 function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
-	core.debug("overriding nopeus release version in path: ", nopeusConfig, " with release version: ", releaseVersion)
+	core.debug(`overriding nopeus release version in path:  ${nopeusConfig},  with release version: ${releaseVersion}`)
 
   // read the nopeus.yaml file
   // and parse the configuration
@@ -84,7 +84,7 @@ function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
   })
 
   // write the nopeus.yaml file
-  fs.writeFileSync(nopeusConfigPath, yaml.dump(config))
+  fs.writeFileSync(nopeusConfig, yaml.dump(config))
 	core.debug(fs.readFileSync(nopeusConfig, "utf8"))
 }
 
