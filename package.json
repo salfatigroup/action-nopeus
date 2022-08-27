@@ -4,7 +4,7 @@
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "ncc build src/index.js -o dist --source-map"
+    "build": "rm -rf && ncc build src/index.js -o dist --source-map"
   },
   "dependencies": {
     "@actions/core": "^1.9.1",
