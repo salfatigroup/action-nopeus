@@ -15,6 +15,10 @@ inputs:
   aws_secret_access_key:
     description: The AWS secret access key
     required: false
+  ignore_env_files:
+    description: Ignore the .env file reference in the nopeus.yaml
+    required: false
+    default: "false"
 runs:
   using: node16
   main: dist/index.js

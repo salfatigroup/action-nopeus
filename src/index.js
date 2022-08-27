@@ -15,6 +15,7 @@ const inputs = {
 	disableCache: core.getInput("disable_cache") === "true",
 	awsAccessKeyId: core.getInput("aws_access_key_id"),
 	awsSecretAccessKey: core.getInput("aws_secret_access_key"),
+  ignoreDotenv: core.getInput("ignore_env_files") === "true",
 }
 
 // action entrypoint
@@ -103,6 +104,14 @@ function updateEnvironments(nopeusConfigPath, environments) {
   environmentsToRemove.forEach(env => {
     delete nopeusConfig.environments[env]
   })
+
+  // remove .env if ignoreDotenv is true
+  if (inputs.ignoreDotenv) {
+    Object.keys(nopeusConfig.environments).forEach(env => {
+      delete nopeusConfig.environments[env].env_file
+    })
+  }
+
 
   // write the nopeus.yaml file
   fs.writeFileSync(nopeusConfigPath, yaml.dump(nopeusConfig))
