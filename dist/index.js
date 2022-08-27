@@ -7005,6 +7005,7 @@ function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
 
   // write the nopeus.yaml file
   fs.writeFileSync(nopeusConfig, yaml.dump(config))
+  core.debug("nopeus.yaml with updated release version:")
 	core.debug(fs.readFileSync(nopeusConfig, "utf8"))
 }
 
@@ -7017,14 +7018,16 @@ function updateEnvironments(nopeusConfigPath, environments) {
   // parse the configuration
   const nopeusConfig = yaml.load(nopeusConfigContent)
   // remove environments that do not exists in the environments value
-  const environmentsToRemove = nopeusConfig.environments.filter(env => !environments.includes(env.name))
+  const environmentsToRemove = Object.keys(nopeusConfig.environments).filter(env => !environments.includes(env))
   // remove the environments from the nopeus.yaml file
   environmentsToRemove.forEach(env => {
-    delete nopeusConfig.environments[env.name]
+    delete nopeusConfig.environments[env]
   })
 
   // write the nopeus.yaml file
   fs.writeFileSync(nopeusConfigPath, yaml.dump(nopeusConfig))
+  core.debug("nopeus.yaml with updated environments:")
+  core.debug(fs.readFileSync(nopeusConfig, "utf8"))
 }
 
 // install the nopeus binary
