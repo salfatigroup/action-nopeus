@@ -79,8 +79,8 @@ function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
   const config = yaml.load(nopeusConfigContent)
   // override or add the release version to each service
   // in the nopeus.yaml file
-  config.services.forEach(service => {
-    service.version = releaseVersion
+  Object.keys(config.services).forEach(service => {
+    config.services[service].version = releaseVersion
   })
 
   // write the nopeus.yaml file
