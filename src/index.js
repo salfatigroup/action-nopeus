@@ -3,7 +3,7 @@ const fs = require("fs")
 const core = require("@actions/core")
 const path = require("path")
 const childProcess = require("child_process")
-const YAML = require("yaml")
+const yaml = require("js-yaml")
 
 // get the user inputs args
 const inputs = {
@@ -72,9 +72,19 @@ function setupCredentials() {
 // override the nopeus release version
 function overrideNopeusReleaseVersion(nopeusConfig, releaseVersion) {
 	core.debug("overriding nopeus release version in path: ", nopeusConfig, " with release version: ", releaseVersion)
-	const nopeusConfigContent = fs.readFileSync(nopeusConfig, "utf8")
-	const nopeusConfigContentWithReleaseVersion = nopeusConfigContent.replace(/^version:.*$/m, `version: ${releaseVersion}`)
-	fs.writeFileSync(nopeusConfig, nopeusConfigContentWithReleaseVersion)
+
+  // read the nopeus.yaml file
+  // and parse the configuration
+  const nopeusConfigContent = fs.readFileSync(nopeusConfig, "utf8")
+  const config = yaml.load(nopeusConfigContent)
+  // override or add the release version to each service
+  // in the nopeus.yaml file
+  config.services.forEach(service => {
+    service.version = releaseVersion
+  })
+
+  // write the nopeus.yaml file
+  fs.writeFileSync(nopeusConfigPath, yaml.dump(config))
 	core.debug(fs.readFileSync(nopeusConfig, "utf8"))
 }
 
@@ -85,7 +95,7 @@ function updateEnvironments(nopeusConfigPath, environments) {
   // read the nopeus.yaml file
   const nopeusConfigContent = fs.readFileSync(nopeusConfigPath, "utf8")
   // parse the configuration
-  const nopeusConfig = YAML.parse(nopeusConfigContent)
+  const nopeusConfig = yaml.load(nopeusConfigContent)
   // remove environments that do not exists in the environments value
   const environmentsToRemove = nopeusConfig.environments.filter(env => !environments.includes(env.name))
   // remove the environments from the nopeus.yaml file
@@ -94,7 +104,7 @@ function updateEnvironments(nopeusConfigPath, environments) {
   })
 
   // write the nopeus.yaml file
-  fs.writeFileSync(nopeusConfigPath, YAML.stringify(nopeusConfig))
+  fs.writeFileSync(nopeusConfigPath, yaml.dump(nopeusConfig))
 }
 
 // install the nopeus binary
