@@ -11,7 +11,7 @@ const inputs = {
   environmentsToDeploy: core.getInput("environments"),
 	nopeusConfig: path.join(process.env.GITHUB_WORKSPACE, core.getInput("nopeusConfig") || "nopeus.yaml"),
 	nopeusToken: process.env.NOPEUS_TOKEN,
-	downloadToken: process.env.NOPEUS_DOWNLOAD_KEY,
+	// downloadToken: process.env.NOPEUS_DOWNLOAD_KEY,
 	disableCache: core.getInput("disable_cache") === "true",
 	awsAccessKeyId: core.getInput("aws_access_key_id"),
 	awsSecretAccessKey: core.getInput("aws_secret_access_key"),
@@ -128,7 +128,7 @@ function installNopeus() {
 
 	core.debug("installing nopeus binary")
 	// install nopeus
-	cmd = `curl -sfL https://cdn.salfati.group/nopeus/install.sh | NOPEUS_TOKEN=${inputs.downloadToken} bash`
+	cmd = `curl -sfL https://cdn.salfati.group/nopeus/install.sh | bash`
 	childProcess.execSync(cmd, { stdio: "inherit" })
 	core.debug("installation complete")
 }
